@@ -1,0 +1,32 @@
+#!/usr/bin/python
+
+import os
+import sys
+from syslog import syslog
+from ec2sys_autotune.ec2_autotune_start import Ec2AutotuneStart
+from ec2sys_autotune.ec2_instance_exception import Ec2AutotuneError
+import argparse
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config',
+                        default="/etc/ec2sys-autotune.cfg",
+                        help='Configuration file to use',
+                        type=str)
+    parser.add_argument('--genconfigonly',
+                        default=False,
+                        help='Generate configuration file for active profile',
+                        action="store_true")
+
+    args = parser.parse_args()
+    autotune = Ec2AutotuneStart(args.config, args.genconfigonly)
+    try:
+        autotune.start()
+    except Ec2AutotuneError, e:
+        syslog(e.msg)
+        sys.exit(-1)
+    sys.exit(0)
+
+if __name__ == '__main__':
+    main()

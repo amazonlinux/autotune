@@ -1,0 +1,15 @@
+[Unit]
+Description=EC2 System Autotuning
+After=network.target syslog.target
+DefaultDependencies=no
+Conflicts=shutdown.target
+
+[Service]
+ExecStart=/usr/bin/ec2sys_autotune_start --config /etc/ec2sys-autotune.cfg
+ExecStop=/usr/bin/ec2sys_autotune_stop --config /etc/ec2sys-autotune.cfg
+Type=oneshot
+RemainAfterExit=yes
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
