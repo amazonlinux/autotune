@@ -4,7 +4,7 @@ Release:        1%{?dist}
 Summary:        AWS EC2 instance autotuning
 
 Group:          Applications/Engineering
-License:        GNU GENERAL PUBLIC LICENSE 2.0
+License:        GPLv2
 URL:            https://github.com/aws/ec2sys-autotune
 Source0:        %{name}-%{version}.tar.gz
 BuildArch:      noarch
