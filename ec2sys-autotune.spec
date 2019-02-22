@@ -5,7 +5,7 @@ Summary:        AWS EC2 instance autotuning
 
 Group:          Applications/Engineering
 License:        GPLv2
-URL:            https://github.com/aws/ec2sys-autotune
+URL:            https://github.com/awslabs/autotune
 Source0:        %{name}-%{version}.tar.gz
 BuildArch:      noarch
 Requires(pre):  systemd
