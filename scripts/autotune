@@ -609,6 +609,10 @@ SUBCMD      Following are sub-commands to autotune:
 
 
 def main():
+    if os.geteuid() != 0:
+        print("\nNeed to be root to run this script.\n")
+        sys.exit(-1)
+
     args = add_arguments_and_parse()
 
     try:
