@@ -1,5 +1,5 @@
 Name:           ec2sys-autotune
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        AWS EC2 instance autotuning
 
