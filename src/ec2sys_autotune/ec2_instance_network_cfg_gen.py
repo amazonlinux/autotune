@@ -6,6 +6,7 @@ This class needs to be a composition of base class.
 import os
 import sys
 from syslog import syslog
+from ec2_instance_high_networking_performance import *
 
 # Exceptions
 from ec2sys_autotune.ec2_instance_exception import Ec2AutotuneError
@@ -52,8 +53,7 @@ class CfgGenNetworkSettings(object):
             networking_performance = self.get_instance_data(
                                          "Networking Performance")
 
-            if (networking_performance == "25 Gigabit" or
-                    networking_performance == "10 Gigabit"):
+            if (networking_performance in HIGH_NETWORK_PERFORMANCE):
                 '''
                 busy_read:
                 Low latency busy poll timeout for socket reads.
@@ -66,54 +66,63 @@ class CfgGenNetworkSettings(object):
                 self.set_sysctl_config("net.core.busy_read", 0)
                 self.set_sysctl_config("net.core.busy_poll", 0)
 
-            if (networking_performance == "25 Gigabit"):
+            if (networking_performance in HIGH_NETWORK_PERFORMANCE):
                 '''
                 Internal tests showed a latency of 100 ms as RTT.
                 To avoid bloating buffers in WAN, use only 20% of
                 bandwidth delay product.
                 Max bandwidth in WAN is limited by slowest link
                 in the path.
+                '''
+                __min = 4
+                if (networking_performance == "100 Gigabit"):
+                    __def = 30
+                    __max = 240
+                elif (networking_performance == "50 Gigabit"):
+                    __def = 30
+                    __max = 120
+                elif (networking_performance == "25 Gigabit"):
+                    __def = 30
+                    __max = 60
+                elif (networking_performance == "20 Gigabit"):
+                    __def = 12
+                    __max = 48
+                else:
+                    # networking_performance == "10 Gigabit"
+                    __def = 12
+                    __max = 24
 
+                '''
                 rmem_max
                 The maximum receive socket buffer size in bytes.
                 '''
-                self.set_sysctl_config("net.core.rmem_max", 1024 * 1024 * 60)
+                self.set_sysctl_config("net.core.rmem_max",
+                                       1024 * 1024 * __max)
 
                 '''
                 wmem_max
                 The maximum send socket buffer size in bytes.
                 '''
-                self.set_sysctl_config("net.core.wmem_max", 1024 * 1024 * 60)
+                self.set_sysctl_config("net.core.wmem_max",
+                                       1024 * 1024 * __max)
 
                 '''
                 tcp_rmem used by auto tuning
                 '''
                 self.set_sysctl_config("net.ipv4.tcp_rmem",
-                                       [1024 * 4,
-                                        1024 * 1024 * 30,
-                                        1024 * 1024 * 60])
+                                       [1024 * __min,
+                                        1024 * 1024 * __def,
+                                        1024 * 1024 * __max])
 
                 '''
                 tcp_wmem used by auto tuning
                 '''
                 self.set_sysctl_config("net.ipv4.tcp_wmem",
-                                       [1024 * 4,
-                                        1024 * 1024 * 30,
-                                        1024 * 1024 * 60])
-            elif (networking_performance == "10 Gigabit"):
-                self.set_sysctl_config("net.core.rmem_max", 1024 * 1024 * 24)
-                self.set_sysctl_config("net.core.wmem_max", 1024 * 1024 * 24)
-                self.set_sysctl_config("net.ipv4.tcp_rmem",
-                                       [1024 * 4,
-                                        1024 * 1024 * 12,
-                                        1024 * 1024 * 24])
-                self.set_sysctl_config("net.ipv4.tcp_wmem",
-                                       [1024 * 4,
-                                        1024 * 1024 * 12,
-                                        1024 * 1024 * 24])
+                                       [1024 * __min,
+                                        1024 * 1024 * __def,
+                                        1024 * 1024 * __max])
 
-            if (networking_performance == "25 Gigabit" or
-                    networking_performance == "10 Gigabit"):
+            if (networking_performance in HIGH_NETWORK_PERFORMANCE):
                 # Good for fixed speed network
                 self.set_sysctl_config("net.ipv4.tcp_slow_start_after_idle",
                                        0)
