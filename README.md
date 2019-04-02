@@ -127,3 +127,9 @@ autotune exclude sysctl:vm.swappiness
 
 Delete customized tunable from autotune profile:
 autotune delete sysctl:vm.swappiness
+
+Supported Distro's:
+-------------------
+Amazon Linux Kernel Autotuning is currently supported on Amazon Linux 2.
+This package can be ported to Amazon Linux 1 and other distributions
+with minimal changes.
