@@ -19,7 +19,7 @@ with open("README.md", "r") as fp:
     ec2sys_autotune_long_description = fp.read()
 
 setup(name="ec2sys-autotune",
-      version='1.0.5',
+      version='1.0.6',
       author="Vallish Vaidyeshwara",
       author_email="vallish@amazon.com",
       url="https://github.com/amazonlinux/autotune",
