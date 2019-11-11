@@ -1,4 +1,4 @@
-Amazon Linux Kernel Autotuning:
+Amazon Linux Kernel Autotuning (Beta):
 -------------------------------
 
 License:
@@ -84,16 +84,16 @@ Building:
 The code can be build using the Makefile script provided in the source.
 
 1) Create a source distribution in gztar format
-make sources
+`make sources`
 
 2) Install everything from build directory
-make install
+`make install`
 
 3) Create an RPM distribution
-make rpm
+`make rpm`
 
 4) Clean up temporary files from 'build' command
-make clean
+`make clean`
 
 Usage:
 ------
